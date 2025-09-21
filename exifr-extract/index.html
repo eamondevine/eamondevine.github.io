@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../styles.css" />
+    <title>EXIFR Extractor</title>
+    <script src="https://unpkg.com/exifr/dist/full.umd.js"></script>
+    <style>
+      img {
+        max-width: 300px;
+        display: block;
+        margin-bottom: 1rem;
+      }
+      #googleMapLink {
+        color: lightblue;
+      }
+
+      pre {
+        white-space: pre-wrap; /* allow wrapping */
+        word-wrap: break-word; /* break long words */
+        overflow-x: auto; /* horizontal scroll if needed */
+        max-width: 100%; /* don’t overflow container */
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="underliner">Extract EXIF Data</h1>
+    <h2>Choose a file from your device</h2>
+    <p>This is a static site, so nobody has access to this picture but you</p>
+    <input type="file" id="fileInput" />
+    <!-- Image preview -->
+    <img id="preview" src="" alt="Uploaded Image" style="display: none" />
+    <!-- Google Maps link -->
+    <a id="googleMapLink" href="#" target="_blank" style="display: none"
+      >View on Google Maps</a
+    >
+    <p id="formattedDate"></p>
+    <p id="label" style="display: none">See Metadata Below &#11015;</p>
+    <div class="bordered-div div-wrap-1">
+      <a href="../index.html">
+        <p id="link-to-test">Homepage</p>
+      </a>
+    </div>
+    <pre id="output"></pre>
+
+    <script>
+      const input = document.getElementById("fileInput");
+      const output = document.getElementById("output");
+      const preview = document.getElementById("preview");
+      const googleLink = document.getElementById("googleMapLink");
+      const metadataLabel = document.getElementById("label");
+      const formattedDateEl = document.getElementById("formattedDate");
+
+      input.addEventListener("change", async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // 1️⃣ Show temporary preview
+        const tempURL = URL.createObjectURL(file);
+        preview.src = tempURL;
+        preview.style.display = "block";
+
+        try {
+          // 2️⃣ Parse EXIF
+          const exifData = await exifr.parse(file);
+          output.textContent = JSON.stringify(exifData, null, 2);
+
+          // 3️⃣ Format DateTimeOriginal (if exists)
+          if (exifData?.DateTimeOriginal) {
+            const dateObj = new Date(exifData.DateTimeOriginal);
+            const options = {
+              weekday: "short",
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+              timeZoneName: "short",
+            };
+            formattedDateEl.textContent = `Photo taken on: ${dateObj.toLocaleString(
+              undefined,
+              options
+            )}`;
+          } else {
+            formattedDateEl.textContent = "No date info available.";
+          }
+
+          // 4️⃣ Generate Google Maps link if coordinates exist
+          if (exifData?.latitude && exifData?.longitude) {
+            const lat = exifData.latitude;
+            const lon = exifData.longitude;
+            googleLink.href = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
+            googleLink.style.display = "inline-block";
+            metadataLabel.style.display = "block";
+          } else {
+            googleLink.style.display = "none";
+          }
+        } catch (err) {
+          output.textContent = "Error reading EXIF: " + err;
+          googleLink.style.display = "none";
+          formattedDateEl.textContent = "No date info available.";
+        }
+      });
+    </script>
+  </body>
+</html>
