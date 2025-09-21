@@ -44,3 +44,19 @@ pre {
 .underliner {
   text-decoration: underline;
 }
+
+img {
+  max-width: 300px;
+  display: block;
+  margin-bottom: 1rem;
+}
+#googleMapLink {
+  color: lightblue;
+}
+
+pre {
+  white-space: pre-wrap; /* allow wrapping */
+  word-wrap: break-word; /* break long words */
+  overflow-x: auto; /* horizontal scroll if needed */
+  max-width: 100%; /* don’t overflow container */
+}
