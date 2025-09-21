@@ -1,0 +1,21 @@
+body {
+  background-color: black;
+}
+
+h1,
+h2,
+p {
+  color: antiquewhite;
+  margin: 0;
+  padding: 0;
+}
+
+.div-wrap-1 {
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+}
+
+#intro {
+  text-align: center;
+}
