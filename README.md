@@ -1,6 +1,6 @@
 - 👋 Hi, I’m @eamondevine
 - 👀 I’m interested in ... languages, coding, camping, music, television.
-- 🌱 I’m currently learning ... javascript, HTML, CSS.
+- 🌱 I’m currently learning ... javascript, HTML, CSS, NextJS.
 - 💞️ I’m looking to collaborate on ... things that I'm interested in! See above ^
 - 📫 How to reach me ... you can email me @ eamondevine1@gmail.com
 - 😄 Pronouns: ... He/Him
