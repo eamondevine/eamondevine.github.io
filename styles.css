@@ -1,15 +1,28 @@
 body {
   background-color: black;
   font-size: 1.5rem;
-  padding: 6%;
+  padding: 4%;
+}
+
+body > div {
+  padding: 0;
 }
 
 h1,
 h2,
-p,
-a,
-pre {
+p:not(#link-to-test),
+a:not(#link-to-test),
+pre,
+details,
+summary {
   color: antiquewhite;
+}
+
+#link-to-test {
+  margin: 0;
+  color: darkblue;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
 }
 
 .div-wrap-1 {
@@ -22,15 +35,16 @@ pre {
 }
 
 .bordered-div {
-  height: auto;
+  height: fit-content;
   width: fit-content;
   border: 2px solid cornsilk;
   border-radius: 5px;
   margin: 3rem auto;
-  padding: 1rem; /* optional for spacing */
+  padding: 0.5rem; /* optional for spacing */
   text-align: center; /* optional for center text */
   transition: transform 0.2s; /* optional hover effect */
   cursor: pointer;
+  background-color: bisque;
 }
 
 .bordered-div:hover {
@@ -59,4 +73,8 @@ pre {
   word-wrap: break-word; /* break long words */
   overflow-x: auto; /* horizontal scroll if needed */
   max-width: 100%; /* don’t overflow container */
+}
+
+.mt {
+  margin-top: 1rem;
 }
