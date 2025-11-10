@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="bordered-div-2">
+      <a href="../index.html">
+        <p id="link-to-test">Homepage</p>
+      </a>
+    </div>
+    <div class="div-wrap-1">
+      <p>Tesitng right hur</p>
+    </div>
+    <br />
+    <br />
+    <div class="div-wrap-1">
+      <div class="text-page-center">
+        <form oninput="result.value=parseFloat(a.value)+parseFloat(b.value)">
+          <input type="number" id="b" name="b" value="50" /> <span>+</span>
+          <input type="number" id="a" name="a" value="10" /> <span>=</span>
+
+          <div class="div-wrap-1">
+            <output name="result" for="a b" class="border-boy">60</output>
+          </div>
+        </form>
+        <br />
+        <form oninput="result.value=parseFloat(a.value)*parseFloat(b.value)">
+          <input type="number" id="b" name="b" value="50" /> <span>x</span>
+          <input type="number" id="a" name="a" value="10" /> <span>=</span>
+          <div class="div-wrap-1">
+            <output name="result" for="a b" class="border-boy">500</output>
+          </div>
+        </form>
+        <br />
+        <form oninput="result.value=parseFloat(b.value)/parseFloat(a.value)">
+          <input type="number" id="b" name="b" value="50" /> <span>÷</span>
+          <input type="number" id="a" name="a" value="10" /> <span>=</span>
+          <div class="div-wrap-1">
+            <output name="result" for="a b" class="border-boy">5</output>
+          </div>
+        </form>
+        <br />
+        <form oninput="result.value=a.value+' '+b.value">
+          <input type="text" id="a" name="a" value="Eamon" /> <span>AND</span>
+          <input type="text" id="b" name="b" value="Devine" /> <span>=</span>
+          <div class="div-wrap-1">
+            <output name="result" for="a b" class="border-boy"
+              >Eamon Devine</output
+            >
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

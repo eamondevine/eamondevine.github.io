@@ -14,7 +14,8 @@ p:not(#link-to-test),
 a:not(#link-to-test),
 pre,
 details,
-summary {
+summary,
+span {
   color: antiquewhite;
 }
 
@@ -23,6 +24,10 @@ summary {
   color: darkblue;
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
+}
+
+.flex {
+  display: flex;
 }
 
 .div-wrap-1 {
@@ -41,6 +46,18 @@ summary {
   border-radius: 5px;
   margin: 3rem auto;
   padding: 0.5rem; /* optional for spacing */
+  text-align: center; /* optional for center text */
+  transition: transform 0.2s; /* optional hover effect */
+  cursor: pointer;
+  background-color: bisque;
+}
+
+.bordered-div-2 {
+  height: fit-content;
+  width: fit-content;
+  border: 2px solid cornsilk;
+  border-radius: 5px;
+  padding: 0.2rem; /* optional for spacing */
   text-align: center; /* optional for center text */
   transition: transform 0.2s; /* optional hover effect */
   cursor: pointer;
@@ -77,4 +94,22 @@ pre {
 
 .mt {
   margin-top: 1rem;
+}
+
+.border-boy {
+  margin-top: 0.5rem;
+  border: 2px solid white;
+  border-radius: 5px;
+  padding: 0.2rem;
+  background-color: white;
+}
+
+input {
+  font-size: large;
+  width: fit-content;
+}
+
+output {
+  width: fit-content;
+  padding: 0.2rem;
 }
