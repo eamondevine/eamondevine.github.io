@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Multi RSS Embed</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+      }
+      .rss-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1rem;
+      }
+      .feed {
+        border: 1px solid #ddd;
+        padding: 1rem;
+      }
+      .feed h3 {
+        margin-top: 0;
+      }
+      .item {
+        margin-bottom: 0.75rem;
+      }
+      .item a {
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .item p {
+        margin: 0.25rem 0 0;
+        font-size: 0.9em;
+        color: #444;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Latest Updates</h1>
+
+    <div class="rss-grid" id="feeds"></div>
+
+    <script>
+      const FEEDS = [
+        "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+      ];
+
+      const MAX_ITEMS = 4;
+
+      function fetchFeed(rssUrl) {
+        const proxy = "https://api.rss2json.com/v1/api.json?rss_url=";
+        return fetch(proxy + encodeURIComponent(rssUrl)).then((res) =>
+          res.json()
+        );
+      }
+
+      function renderFeed(feed) {
+        const container = document.createElement("div");
+        container.className = "feed";
+
+        container.innerHTML = `
+      <h3>
+        <a href="${feed.feed.link}" target="_blank" rel="noopener">
+          ${feed.feed.title}
+        </a>
+      </h3>
+    `;
+
+        feed.items.slice(0, MAX_ITEMS).forEach((item) => {
+          const div = document.createElement("div");
+          div.className = "item";
+
+          div.innerHTML = `
+        <a href="${item.link}" target="_blank" rel="noopener">
+          ${item.title}
+        </a>
+        <p>${item.description || ""}</p>
+      `;
+
+          container.appendChild(div);
+        });
+
+        return container;
+      }
+
+      Promise.all(FEEDS.map(fetchFeed))
+        .then((results) => {
+          const root = document.getElementById("feeds");
+          results.forEach((feed) => {
+            if (feed && feed.status === "ok") {
+              root.appendChild(renderFeed(feed));
+            }
+          });
+        })
+        .catch((err) => {
+          console.error("RSS error:", err);
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Time Zones</title>
+    <link rel="stylesheet" href="timezones.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-glow"></div>
+    <div class="container">
+        <header>
+            <h1>Global Time Zones</h1>
+            <p>Explore time zones across the world with their respective countries and regions.</p>
+        </header>
+        
+        <div class="controls">
+            <input type="text" id="searchInput" placeholder="Search for a city, country, or time zone..." aria-label="Search time zones">
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <div class="col">Time Zone ID</div>
+                <div class="col">Country</div>
+                <div class="col">Region/City</div>
+                <div class="col">UTC Offset</div>
+            </div>
+            <div id="timezoneList" class="table-body">
+                <!-- Items will be injected here by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="timezones.js"></script>
+</body>
+</html>
