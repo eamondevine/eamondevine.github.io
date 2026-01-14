@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../styles.css" />
+    <title>Chinese Char Lookup</title>
+  </head>
+  <body>
+    <div class="bordered-div-2">
+      <a href="../index.html">
+        <p id="link-to-test">Homepage</p>
+      </a>
+    </div>
+    <section id="search">
+      <div class="div-wrap-1">
+        <h1>Enter a Chinese character</h1>
+      </div>
+      <div class="bordered-div">
+        <input id="input" />
+      </div>
+    </section>
+    <section id="results">
+      <div class="div-wrap-1"><p id="zi"></p></div>
+      <div class="div-wrap-1"><p id="comps"></p></div>
+      <div class="div-wrap-1"><p id="uni"></p></div>
+      <div class="div-wrap-1"><p id="pinyin"></p></div>
+      <div class="div-wrap-1"><p id="zhuyin"></p></div>
+      <div class="div-wrap-1"><p id="def"></p></div>
+    </section>
+    <script>
+      const zi = document.getElementById("zi");
+      const uni = document.getElementById("uni");
+      const pinyin = document.getElementById("pinyin");
+      const zhuyin = document.getElementById("zhuyin");
+      const def = document.getElementById("def");
+      const comps = document.getElementById("comps");
+      const components = document.getElementById("components");
+      const input = document.getElementById("input");
+
+      let charData = [];
+
+      async function loadData() {
+        try {
+          const response = await fetch("./output.json");
+          charData = await response.json();
+        } catch (err) {
+          console.error("charData not found.", err);
+          zi.innerText = "Sorry, no deets";
+        }
+      }
+      loadData();
+
+      input.addEventListener("input", () => {
+        const value = input.value.trim();
+        if (value.codePointAt(0) === undefined || value.length > 2) {
+          clearResults();
+          return;
+        }
+        const match = charData.find((item) => item.char === value);
+        renderResult(match);
+      });
+
+      function renderResult(data) {
+        zi.textContent = `Character: ${data.char}`;
+        uni.textContent = `Unicode: ${data.unicode_hex}`;
+        pinyin.textContent = `Pinyin: ${data.pinyin}`;
+        zhuyin.textContent = `Zhuyin: ${data.zhuyin}`;
+        def.textContent = `Brief definition: ${data.definition}`;
+
+        comps.innerHTML = "";
+
+        for (let i = 1; i <= 4; i++) {
+          const idc = data[`idc${i}`];
+          const ids = data[`ids${i}`];
+          if (idc && ids) {
+            const part = `${idc} ${ids.join(" ")}`;
+            const p = document.createElement("p");
+            p.textContent = part;
+            comps.appendChild(p);
+          }
+        }
+      }
+
+      function clearResults() {
+        zi.textContent = "";
+        uni.textContent = "";
+        pinyin.textContent = "";
+        zhuyin.textContent = "";
+        def.textContent = "";
+        comps.textContent = "";
+      }
+    </script>
+  </body>
+</html>
