@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>漢字 Flashcards</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #1a1410;
+        --paper: #f5f0e8;
+        --red: #c0392b;
+        --gold: #b8860b;
+        --shadow: rgba(26, 20, 16, 0.15);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Cormorant Garamond", serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background-image: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 39px,
+          rgba(180, 160, 120, 0.12) 40px
+        );
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+      header h1 {
+        font-family: "Noto Serif SC", serif;
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: 0.3em;
+        color: var(--red);
+      }
+      header p {
+        font-size: 1rem;
+        font-style: italic;
+        color: #7a6a5a;
+        margin-top: 0.25rem;
+        letter-spacing: 0.1em;
+      }
+
+      /* ── Card (no flip, just a static face) ── */
+      .scene {
+        width: min(460px, 100%);
+        height: 280px;
+        margin-bottom: 2rem;
+      }
+
+      .card {
+        width: 100%;
+        height: 100%;
+        border-radius: 6px;
+        border: 1.5px solid rgba(180, 160, 120, 0.5);
+        background: #faf6ee;
+        background-image:
+          radial-gradient(
+            ellipse at 10% 10%,
+            rgba(192, 57, 43, 0.05) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse at 90% 90%,
+            rgba(184, 134, 11, 0.06) 0%,
+            transparent 60%
+          );
+        filter: drop-shadow(0 8px 24px var(--shadow));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 3.5rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::before,
+      .card::after {
+        content: "◆";
+        position: absolute;
+        color: rgba(192, 57, 43, 0.2);
+        font-size: 0.6rem;
+      }
+      .card::before {
+        top: 12px;
+        left: 16px;
+      }
+      .card::after {
+        bottom: 12px;
+        right: 16px;
+      }
+
+      /* ── Chinese layout ── */
+      .chinese-layout {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      .zhuyin {
+        position: absolute;
+        left: -2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        font-family: "Noto Serif SC", serif;
+        font-size: 0.85rem;
+        color: var(--gold);
+        letter-spacing: 0.1em;
+        line-height: 1.4;
+        max-height: 220px;
+        overflow: hidden;
+      }
+
+      .chinese {
+        font-family: "Noto Serif SC", serif;
+        font-size: 3.2rem;
+        font-weight: 700;
+        line-height: 1.1;
+        color: var(--ink);
+        letter-spacing: 0.05em;
+        text-align: center;
+      }
+
+      .pinyin {
+        position: absolute;
+        right: -2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        font-size: 0.85rem;
+        color: var(--red);
+        letter-spacing: 0.1em;
+        font-style: italic;
+        line-height: 1.4;
+        max-height: 220px;
+        overflow: hidden;
+      }
+
+      /* ── English layout ── */
+      .english {
+        font-size: 1.55rem;
+        font-weight: 300;
+        text-align: center;
+        line-height: 1.5;
+        color: var(--ink);
+        letter-spacing: 0.04em;
+      }
+
+      /* ── Controls ── */
+      .controls {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      button {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.9rem;
+        letter-spacing: 0.15em;
+        padding: 0.6rem 1.6rem;
+        border: 1.5px solid var(--ink);
+        background: transparent;
+        color: var(--ink);
+        cursor: pointer;
+        border-radius: 2px;
+        transition: all 0.2s;
+      }
+      button:hover {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      button.primary {
+        background: var(--red);
+        border-color: var(--red);
+        color: #fff;
+      }
+      button.primary:hover {
+        background: #a93226;
+        border-color: #a93226;
+      }
+
+      .progress {
+        margin-top: 2rem;
+        font-size: 0.8rem;
+        color: #9a8a7a;
+        letter-spacing: 0.1em;
+      }
+
+      /* ── Mode toggle ── */
+      .mode-bar {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .mode-btn {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.9rem;
+        border: 1px solid #c0b09a;
+        background: transparent;
+        color: #7a6a5a;
+        cursor: pointer;
+        border-radius: 20px;
+        transition: all 0.2s;
+        letter-spacing: 0.08em;
+      }
+      .mode-btn.active {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--paper);
+      }
+
+      .status {
+        font-size: 1rem;
+        font-style: italic;
+        color: #9a8a7a;
+        text-align: center;
+      }
+
+      .config-box {
+        width: min(480px, 100%);
+        background: #faf6ee;
+        border: 1.5px solid rgba(180, 160, 120, 0.5);
+        border-radius: 6px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      .config-box label {
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        color: #7a6a5a;
+        text-transform: uppercase;
+      }
+      .config-box input {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #c0b09a;
+        border-radius: 3px;
+        background: var(--paper);
+        color: var(--ink);
+        width: 100%;
+      }
+      .config-box input:focus {
+        outline: none;
+        border-color: var(--red);
+      }
+
+      #app {
+        display: none;
+      }
+
+      @keyframes cardIn {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .scene.animate {
+        animation: cardIn 0.25s ease forwards;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>漢字卡片</h1>
+      <p>Chinese Flashcards</p>
+    </header>
+
+    <div id="setup">
+      <div class="config-box">
+        <label>Google Sheet CSV URL</label>
+        <input
+          id="csvUrl"
+          type="text"
+          placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv"
+        />
+        <small style="color: #9a8a7a; font-size: 0.78rem; line-height: 1.5">
+          Google Sheets → File → Share → Publish to web → select your tab → CSV
+          → Publish.
+        </small>
+        <button class="primary" onclick="loadSheet()">Load Flashcards</button>
+      </div>
+      <p id="setupStatus" class="status"></p>
+    </div>
+
+    <div id="app">
+      <div class="mode-bar">
+        <button class="mode-btn active" data-mode="zh" onclick="setMode('zh')">
+          Chinese
+        </button>
+        <button class="mode-btn" data-mode="en" onclick="setMode('en')">
+          English
+        </button>
+      </div>
+
+      <div class="scene" id="scene">
+        <div class="card" id="card">
+          <!-- Chinese layout -->
+          <div class="chinese-layout" id="chineseLayout">
+            <span class="zhuyin" id="cardZhuyin"></span>
+            <span class="chinese" id="cardChinese"></span>
+            <span class="pinyin" id="cardPinyin"></span>
+          </div>
+
+          <!-- English layout -->
+          <div
+            id="englishLayout"
+            style="
+              display: none;
+              width: 100%;
+              height: 100%;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <span class="english" id="cardEnglish"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button onclick="prevCard()">← Prev</button>
+        <button class="primary" onclick="nextCard()">Next →</button>
+        <button onclick="shuffleCards()">⇌ Shuffle</button>
+      </div>
+      <p class="progress" id="progress"></p>
+    </div>
+
+    <script>
+      let words = [];
+      let deck = [];
+      let pos = 0;
+      let mode = "zh";
+
+      // ── Fetch ──────────────────────────────────────────────
+      async function loadSheet() {
+        const url = document.getElementById("csvUrl").value.trim();
+        const status = document.getElementById("setupStatus");
+        if (!url) {
+          status.textContent = "Please paste your CSV URL.";
+          return;
+        }
+        status.textContent = "Fetching sheet…";
+
+        let csvText = null;
+
+        try {
+          const r = await fetch(url);
+          if (r.ok) {
+            csvText = await r.text();
+            console.log("OK: direct");
+          }
+        } catch (e) {
+          console.log("FAIL: direct");
+        }
+
+        if (!csvText) {
+          try {
+            const r = await fetch(
+              "https://corsproxy.io/?" + encodeURIComponent(url),
+            );
+            if (r.ok) {
+              csvText = await r.text();
+              console.log("OK: corsproxy");
+            }
+          } catch (e) {
+            console.log("FAIL: corsproxy");
+          }
+        }
+
+        if (!csvText) {
+          try {
+            const r = await fetch(
+              "https://api.allorigins.win/get?url=" + encodeURIComponent(url),
+            );
+            const j = await r.json();
+            if (j && j.contents) {
+              csvText = j.contents;
+              console.log("OK: allorigins");
+            }
+          } catch (e) {
+            console.log("FAIL: allorigins");
+          }
+        }
+
+        if (!csvText) {
+          status.textContent =
+            "All fetch attempts failed. Check console (F12).";
+          return;
+        }
+
+        parseCSV(csvText);
+        console.log("Words parsed:", words.length, words[0]);
+
+        if (!words.length) {
+          status.textContent =
+            "Loaded but found 0 words. Check column headers: Chinese, Pinyin, English.";
+          return;
+        }
+
+        status.textContent = "";
+        document.getElementById("setup").style.display = "none";
+        const app = document.getElementById("app");
+        app.style.display = "flex";
+        app.style.flexDirection = "column";
+        app.style.alignItems = "center";
+        shuffleCards();
+      }
+
+      // ── CSV Parser ─────────────────────────────────────────
+      function parseCSVRow(line) {
+        const fields = [];
+        let cur = "",
+          inQ = false;
+        for (let i = 0; i < line.length; i++) {
+          const ch = line[i];
+          if (ch === '"') {
+            if (inQ && line[i + 1] === '"') {
+              cur += '"';
+              i++;
+            } else inQ = !inQ;
+          } else if (ch === "," && !inQ) {
+            fields.push(cur.trim());
+            cur = "";
+          } else {
+            cur += ch;
+          }
+        }
+        fields.push(cur.trim());
+        return fields;
+      }
+
+      function parseCSV(text) {
+        const lines = text
+          .replace(/\r\n/g, "\n")
+          .replace(/\r/g, "\n")
+          .trim()
+          .split("\n");
+        const rows = lines.map(parseCSVRow);
+        const header = rows[0].map((h) => h.toLowerCase().trim());
+
+        let colCh = -1,
+          colPy = -1,
+          colEn = -1,
+          colZh = -1;
+        header.forEach((h, i) => {
+          if (/^chinese$|^zh$|^hanzi$/.test(h)) colCh = i;
+          if (/^pinyin$/.test(h)) colPy = i;
+          if (/^english$|^translation$|^meaning$/.test(h)) colEn = i;
+          if (/^zhuyin$|^bopomofo$|^注音$/.test(h)) colZh = i;
+        });
+
+        if (colCh === -1 || colEn === -1) {
+          console.error("Could not find required columns. Headers:", rows[0]);
+          words = [];
+          return;
+        }
+
+        words = rows
+          .slice(1)
+          .filter((r) => r[colCh] && /[\u4e00-\u9fff]/.test(r[colCh]))
+          .map((r) => ({
+            chinese: r[colCh].trim(),
+            pinyin: colPy >= 0 ? (r[colPy] || "").trim() : "",
+            english: (r[colEn] || "").trim(),
+            zhuyin: colZh >= 0 ? (r[colZh] || "").trim() : "",
+          }));
+      }
+
+      // ── Deck ───────────────────────────────────────────────
+      function shuffleCards() {
+        deck = Array.from({ length: words.length }, (_, i) => i);
+        for (let i = deck.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [deck[i], deck[j]] = [deck[j], deck[i]];
+        }
+        pos = 0;
+        showCard();
+      }
+
+      function nextCard() {
+        if (!words.length) return;
+        pos = (pos + 1) % deck.length;
+        showCard();
+      }
+
+      function prevCard() {
+        if (!words.length) return;
+        pos = (pos - 1 + deck.length) % deck.length;
+        showCard();
+      }
+
+      // ── Render ─────────────────────────────────────────────
+      function showCard() {
+        if (!words.length || !deck.length) return;
+
+        const w = words[deck[pos]];
+        const chineseLayout = document.getElementById("chineseLayout");
+        const englishLayout = document.getElementById("englishLayout");
+
+        if (mode === "zh") {
+          chineseLayout.style.display = "flex";
+          englishLayout.style.display = "none";
+          document.getElementById("cardChinese").textContent = w.chinese;
+          document.getElementById("cardPinyin").textContent = w.pinyin;
+          document.getElementById("cardZhuyin").textContent = w.zhuyin;
+        } else {
+          chineseLayout.style.display = "none";
+          englishLayout.style.display = "flex";
+          document.getElementById("cardEnglish").textContent = w.english;
+        }
+
+        const scene = document.getElementById("scene");
+        scene.classList.remove("animate");
+        void scene.offsetWidth;
+        scene.classList.add("animate");
+
+        document.getElementById("progress").textContent =
+          `${pos + 1} / ${deck.length} cards`;
+      }
+
+      // ── Mode ───────────────────────────────────────────────
+      function setMode(m) {
+        mode = m;
+        document.querySelectorAll(".mode-btn").forEach((b) => {
+          b.classList.toggle("active", b.dataset.mode === m);
+        });
+        showCard();
+      }
+
+      // ── Keyboard ───────────────────────────────────────────
+      document.addEventListener("keydown", (e) => {
+        if (!words.length) return;
+        if (e.key === "ArrowRight" || e.key === "l") nextCard();
+        if (e.key === "ArrowLeft" || e.key === "h") prevCard();
+      });
+    </script>
+  </body>
+</html>
