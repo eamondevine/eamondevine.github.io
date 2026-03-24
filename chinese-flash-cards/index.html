@@ -305,11 +305,11 @@
         <input
           id="csvUrl"
           type="text"
-          placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv"
+          placeholder="https://docs.google.com/spreadsheets/d/.../edit"
         />
         <small style="color: #9a8a7a; font-size: 0.78rem; line-height: 1.5">
-          Google Sheets → File → Share → Publish to web → select your tab → CSV
-          → Publish.
+          Paste your normal Google Sheets URL (the one ending in /edit). Make
+          sure the sheet is shared as "Anyone with the link can view".
         </small>
         <button class="primary" onclick="loadSheet()">Load Flashcards</button>
       </div>
@@ -367,12 +367,23 @@
 
       // ── Fetch ──────────────────────────────────────────────
       async function loadSheet() {
-        const url = document.getElementById("csvUrl").value.trim();
+        let url = document.getElementById("csvUrl").value.trim();
         const status = document.getElementById("setupStatus");
         if (!url) {
-          status.textContent = "Please paste your CSV URL.";
+          status.textContent = "Please paste your Google Sheets URL.";
           return;
         }
+
+        // Auto-convert any Google Sheets URL to a CSV export URL
+        const idMatch = url.match(/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+        const gidMatch = url.match(/gid=([0-9]+)/);
+        if (idMatch) {
+          const id = idMatch[1];
+          const gid = gidMatch ? gidMatch[1] : "0";
+          url = `https://docs.google.com/spreadsheets/d/${id}/export?format=csv&gid=${gid}`;
+          console.log("Converted URL:", url);
+        }
+
         status.textContent = "Fetching sheet…";
 
         let csvText = null;
