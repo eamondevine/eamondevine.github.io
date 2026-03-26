@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>5th Grade SuperStar Videos</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Caveat:wght@600;700&family=Fredoka+One&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="hero">
+      <h1 id="name">Penglai Elementary School</h1>
+      <h2 id="class-number">5th Grade Videos</h2>
+    </div>
+
+    <div class="chat-wrap">
+      <div class="qa-pair">
+        <div class="bubble bubble--q">
+          點此查看影片連結
+          <span class="tap-hint">tap me!</span>
+        </div>
+        <div class="bubble bubble--a">尚未準備完成！請3月30號再回來查看。</div>
+      </div>
+
+      <!-- <div class="qa-pair">
+        <div class="bubble bubble--q">
+          此影片將於三週後過期，請在期限前下載。若影片過期後您仍需要，請洽詢貴子女的導師。
+          <span class="tap-hint">tap me!</span>
+        </div>
+        <div class="bubble bubble--a">Teacher Info</div>
+      </div> -->
+
+      <div class="bubble bubble--signoff">
+        Hope you had a great semester!!! 🎉
+      </div>
+    </div>
+
+    <script>
+      document.querySelectorAll(".bubble--q").forEach(function (q) {
+        q.addEventListener("click", function () {
+          var pair = q.closest(".qa-pair");
+          pair.classList.toggle("open");
+        });
+      });
+    </script>
+  </body>
+</html>
