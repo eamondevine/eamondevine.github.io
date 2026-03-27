@@ -125,20 +125,12 @@ body {
   font-family: "Fredoka One", cursive;
   font-size: 1.4rem;
   font-weight: 400;
-
-  cursor: pointer;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease,
-    background 0.15s ease;
 }
-.bubble--q:hover {
+.bubble--a:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 28px rgba(91, 142, 240, 0.3);
 }
-.bubble--q:active {
+.bubble--a:active {
   transform: scale(0.97);
 }
 .qa-pair.open .bubble--q {
@@ -169,25 +161,14 @@ body {
   background: var(--a-bg);
   color: var(--a-text);
   border: 2px solid var(--a-border);
-
+  
   font-weight: 600;
 
-  /* Hidden state */
-  max-height: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  opacity: 0;
-  overflow: hidden;
-  transform: translateY(-8px);
-  transition:
-    max-height 0.35s ease,
-    opacity 0.3s ease,
-    transform 0.3s ease,
-    padding 0.3s ease;
-}
+transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
 
-/* Revealed state */
-.qa-pair.open .bubble--a {
   max-height: 200px;
   padding-top: 16px;
   padding-bottom: 16px;
@@ -198,7 +179,6 @@ body {
 /* Sign-off — centered */
 .bubble--signoff {
   align-self: center;
-  position: absolute;
   bottom: 0;
   background: var(--signoff-bg);
   color: var(--signoff-text);
